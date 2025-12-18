@@ -1,4 +1,7 @@
-<meta charset="UTF-8">
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Assistant Juridique Premium</title>
   <style>
@@ -306,7 +309,7 @@
       padding: 40px;
       border-radius: 24px;
       width: 90%;
-      max-width: 440px;
+      max-width: 480px;
       text-align: center;
       border: 1px solid var(--border);
       box-shadow: 0 20px 60px var(--shadow);
@@ -351,9 +354,54 @@
       line-height: 1.6;
     }
 
+    .modal-buttons {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .modal-choice-btn {
+      flex: 1;
+      padding: 16px;
+      background: var(--surface-elevated);
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      color: var(--text-primary);
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      transition: all 0.3s ease;
+    }
+
+    .modal-choice-btn:hover {
+      border-color: var(--primary);
+      background: rgba(99, 102, 241, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+      text-align: left;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+
+    .form-group label .optional {
+      color: var(--text-secondary);
+      font-weight: 400;
+      font-size: 13px;
+    }
+
     .modal-content input {
       width: 100%;
-      padding: 16px 20px;
+      padding: 14px 18px;
       border-radius: 12px;
       border: 1px solid var(--border);
       background: var(--bg-gradient-start);
@@ -369,8 +417,12 @@
       box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
     }
 
-    .modal-content button {
-      margin-top: 20px;
+    .modal-content input::placeholder {
+      color: var(--text-secondary);
+    }
+
+    .modal-submit-btn {
+      margin-top: 8px;
       width: 100%;
       padding: 16px;
       background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
@@ -385,9 +437,29 @@
       box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
     }
 
-    .modal-content button:hover {
+    .modal-submit-btn:hover {
       transform: translateY(-2px);
       box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+    }
+
+    .back-link {
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      font-size: 14px;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      transition: all 0.3s ease;
+      padding: 8px 12px;
+    }
+
+    .back-link:hover {
+      color: var(--primary-light);
+      text-decoration: underline;
+    }
+
+    .hidden {
+      display: none !important;
     }
 
     @media (max-width: 768px) {
@@ -412,17 +484,81 @@
       .quick-replies {
         max-width: 85%;
       }
+
+      .modal-content {
+        padding: 32px 24px;
+      }
+
+      .modal-buttons {
+        flex-direction: column;
+      }
     }
   </style>
-
-
-  <div id="emailModal" class="modal">
+</head>
+<body>
+  <div id="authModal" class="modal">
     <div class="modal-content">
       <div class="modal-icon">⚖️</div>
       <h2>Bienvenue</h2>
-      <p>Pour commencer, veuillez entrer votre adresse email</p>
-      <input type="email" id="emailInput" placeholder="exemple@domaine.com" autocomplete="email">
-      <button onclick="submitEmail()">Continuer</button>
+      
+      <!-- Choix connexion/inscription -->
+      <div id="authChoice">
+        <p>Comment souhaitez-vous continuer ?</p>
+        <div class="modal-buttons">
+          <button class="modal-choice-btn" onclick="showLogin()">Se connecter</button>
+          <button class="modal-choice-btn" onclick="showRegister()">S'inscrire</button>
+        </div>
+      </div>
+
+      <!-- Formulaire de connexion -->
+      <div id="loginForm" class="hidden">
+        <p>Connectez-vous à votre compte</p>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="loginEmail" placeholder="exemple@domaine.com">
+        </div>
+        <div class="form-group">
+          <label>Mot de passe</label>
+          <input type="password" id="loginPassword" placeholder="••••••••">
+        </div>
+        <button class="modal-submit-btn" onclick="submitLogin()">Se connecter</button>
+        <div style="text-align: center; margin-top: 20px;">
+          <button class="back-link" onclick="showAuthChoice()">← Retour au choix</button>
+        </div>
+      </div>
+
+      <!-- Formulaire d'inscription -->
+      <div id="registerForm" class="hidden">
+        <p>Créez votre compte</p>
+        <div class="form-group">
+          <label>Nom</label>
+          <input type="text" id="registerNom" placeholder="Dupont">
+        </div>
+        <div class="form-group">
+          <label>Prénom</label>
+          <input type="text" id="registerPrenom" placeholder="Jean">
+        </div>
+        <div class="form-group">
+          <label>Entreprise <span class="optional">(optionnel)</span></label>
+          <input type="text" id="registerEntreprise" placeholder="Mon Entreprise SARL">
+        </div>
+        <div class="form-group">
+          <label>Numéro de téléphone</label>
+          <input type="tel" id="registerNumero" placeholder="+33 6 12 34 56 78">
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="registerEmail" placeholder="exemple@domaine.com">
+        </div>
+        <div class="form-group">
+          <label>Mot de passe</label>
+          <input type="password" id="registerPassword" placeholder="••••••••">
+        </div>
+        <button class="modal-submit-btn" onclick="submitRegister()">S'inscrire</button>
+        <div style="text-align: center; margin-top: 20px;">
+          <button class="back-link" onclick="showAuthChoice()">← Retour au choix</button>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -439,21 +575,128 @@
 
     <div class="chat-input-wrapper">
       <div class="chat-input-container">
-        <textarea id="userInput" rows="1" placeholder="Écrivez votre message..." disabled=""></textarea>
-        <button id="sendBtn" onclick="sendMessage()" disabled="">Envoyer</button>
+        <textarea id="userInput" rows="1" placeholder="Écrivez votre message..." disabled></textarea>
+        <button id="sendBtn" onclick="sendMessage()" disabled>Envoyer</button>
       </div>
     </div>
   </div>
 
   <script>
-    let userEmail = '';
+    let userData = {};
     let typingMessage = null;
 
     const chat = document.getElementById('chatContainer');
     const input = document.getElementById('userInput');
     const sendBtn = document.getElementById('sendBtn');
-    const emailModal = document.getElementById('emailModal');
-    const emailInput = document.getElementById('emailInput');
+    const authModal = document.getElementById('authModal');
+
+    // Navigation entre les écrans
+    function showAuthChoice() {
+      document.getElementById('authChoice').classList.remove('hidden');
+      document.getElementById('loginForm').classList.add('hidden');
+      document.getElementById('registerForm').classList.add('hidden');
+    }
+
+    function showLogin() {
+      document.getElementById('authChoice').classList.add('hidden');
+      document.getElementById('loginForm').classList.remove('hidden');
+      document.getElementById('registerForm').classList.add('hidden');
+      setTimeout(() => document.getElementById('loginEmail').focus(), 100);
+    }
+
+    function showRegister() {
+      document.getElementById('authChoice').classList.add('hidden');
+      document.getElementById('loginForm').classList.add('hidden');
+      document.getElementById('registerForm').classList.remove('hidden');
+      setTimeout(() => document.getElementById('registerNom').focus(), 100);
+    }
+
+    // Connexion
+    function submitLogin() {
+      const email = document.getElementById('loginEmail').value.trim();
+      const password = document.getElementById('loginPassword').value.trim();
+
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        alert('Veuillez entrer une adresse email valide');
+        return;
+      }
+
+      if (!password) {
+        alert('Veuillez entrer votre mot de passe');
+        return;
+      }
+
+      userData = {
+        email: email,
+        password: password,
+        type: 'login'
+      };
+
+      startChat();
+    }
+
+    // Inscription
+    function submitRegister() {
+      const nom = document.getElementById('registerNom').value.trim();
+      const prenom = document.getElementById('registerPrenom').value.trim();
+      const entreprise = document.getElementById('registerEntreprise').value.trim();
+      const numero = document.getElementById('registerNumero').value.trim();
+      const email = document.getElementById('registerEmail').value.trim();
+      const password = document.getElementById('registerPassword').value.trim();
+
+      if (!nom || !prenom) {
+        alert('Veuillez entrer votre nom et prénom');
+        return;
+      }
+
+      if (!numero) {
+        alert('Veuillez entrer votre numéro de téléphone');
+        return;
+      }
+
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        alert('Veuillez entrer une adresse email valide');
+        return;
+      }
+
+      if (!password || password.length < 6) {
+        alert('Le mot de passe doit contenir au moins 6 caractères');
+        return;
+      }
+
+      userData = {
+        nom: nom,
+        prenom: prenom,
+        entreprise: entreprise || null,
+        numero: numero,
+        email: email,
+        password: password,
+        type: 'register'
+      };
+
+      startChat();
+    }
+
+    function startChat() {
+      authModal.style.display = 'none';
+      input.disabled = false;
+      sendBtn.disabled = false;
+
+      setTimeout(() => {
+        const prenom = userData.prenom || '';
+        const greeting = prenom ? `Bonjour ${prenom} !` : 'Bonjour !';
+        addBotMessageWithButtons(
+          `${greeting} Je suis votre assistant juridique. Quel est le sujet principal de votre demande ?`,
+          [
+            "Création d'entreprise",
+            "Modification d'entreprise",
+            "Litige ou contentieux",
+            "Contrat ou document juridique",
+            "Autre besoin"
+          ]
+        );
+      }, 300);
+    }
 
     function addMessage(text, sender) {
       const wrapper = document.createElement('div');
@@ -530,41 +773,20 @@
       }, 100);
     }
 
-    function submitEmail() {
-      const email = emailInput.value.trim();
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-        alert('Veuillez entrer une adresse email valide');
-        return;
-      }
-
-      userEmail = email;
-      emailModal.style.display = 'none';
-      input.disabled = false;
-      sendBtn.disabled = false;
-
-      setTimeout(() => {
-        addBotMessageWithButtons(
-          "Bonjour ! Je suis votre assistant juridique. Quel est le sujet principal de votre demande ?",
-          [
-            "Création d'entreprise",
-            "Modification d'entreprise",
-            "Litige ou contentieux",
-            "Contrat ou document juridique",
-            "Autre besoin"
-          ]
-        );
-      }, 300);
-    }
-
     async function sendToBot(text) {
       sendBtn.disabled = true;
       showTyping();
 
       try {
+        const payload = {
+          ...userData,
+          question: text
+        };
+
         const res = await fetch("https://n8n.srv1089930.hstgr.cloud/webhook/legal-chatbot", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email: userEmail, question: text })
+          body: JSON.stringify(payload)
         });
 
         const data = await res.json();
@@ -599,7 +821,6 @@
       input.style.height = 'auto';
       input.style.height = Math.min(input.scrollHeight, 120) + 'px';
     });
-
-    // Focus sur l'input email au chargement
-    emailInput.focus();
   </script>
+</body>
+</html>
